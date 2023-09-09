@@ -1,25 +1,29 @@
 import { NextResponse } from "next/server";
+import Stripe from "stripe";
+import StripeType from "@/types/StripeType";
 
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+export async function POST(request: Request) {
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
+    apiVersion: "2023-08-16",
+  });
 
-export async function POST() {
+  const res = await request.json();
+
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "Stubborn Attachments",
-            images: ["https://i.imgur.com/EHyR2nP.png"],
-          },
-          unit_amount: 2000,
+    line_items: res.map((item: any) => ({
+      price_data: {
+        currency: "sek",
+        product_data: {
+          name: item.name,
+          images: [item.image],
         },
-        quantity: 1,
+        unit_amount: item.price,
       },
-    ],
+      quantity: item.quantity,
+    })),
     mode: "payment",
     success_url: "http://localhost:3000/success",
   });
-  return NextResponse.redirect(session.url, { status: 303 });
+  return NextResponse.json({ id: session?.id });
 }
