@@ -1,7 +1,5 @@
-import React from "react";
-
-const page = () => {
-  return <div>page</div>;
+const SucessPage = () => {
+  return <div>SucessPage</div>;
 };
 
-export default page;
+export default SucessPage;
