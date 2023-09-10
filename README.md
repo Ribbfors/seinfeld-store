@@ -1,6 +1,6 @@
 **Seinfeld Store**
 
-![Jerry clapping](https://www.google.com/url?sa=i&url=https%3A%2F%2Ftenor.com%2Fview%2Fseinfeld-jerry-seinfeld-jerry-pez-pez-dispenser-gif-19578058&psig=AOvVaw2MipRGFJeuZh2XaaW7Ik-B&ust=1694467524709000&source=images&cd=vfe&opi=89978449&ved=0CA4QjRxqFwoTCOjWpMr9oIEDFQAAAAAdAAAAABBH)
+![Jerry clapping](https://media.giphy.com/media/rtr4SdtSxbWXm/giphy.gif)
 
 **The Purpose**
 
