@@ -1,5 +1,5 @@
 const config = {
-  website_url: "https://www.google.com",
+  website_url: "http://localhost:3000",
   stripe: {
     api_version: "2023-08-16",
   },

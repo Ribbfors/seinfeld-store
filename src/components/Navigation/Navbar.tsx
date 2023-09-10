@@ -1,123 +1,92 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import Link from "next/link";
+import config from "../../../config";
+import { useState } from "react";
 import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
 import { EB_Garamond } from "next/font/google";
-import {
-  Avatar,
-  Badge,
-  Button,
-  Dropdown,
-  Navbar as FNavbar,
-} from "flowbite-react";
-import ShoppingCart from "../ShoppingCart";
-import { useCartStore } from "@/store/store";
-import { AiOutlineShoppingCart } from "react-icons/ai";
-
-interface NavbarLink {
-  label: string;
-  href: string;
-  icon?: string;
-  requiresAuth?: boolean;
-}
 
 const Pop = EB_Garamond({ subsets: ["latin"], weight: "600" });
 
-const Navbar = ({ user }: Session) => {
-  const cartStore = useCartStore();
-  const pathname = usePathname();
-  const navbarLinks: NavbarLink[] = [
-    {
-      label: "Home",
-      href: "/",
-    },
-    {
-      label: "Store",
-      href: "/store",
-    },
-    {
-      label: "About",
-      href: "/about",
-    },
-    {
-      label: "Profile",
-      href: "/profile",
-      requiresAuth: true,
-    },
-  ];
-
+const NewNavbar = ({ user }: Session) => {
+  const [showMenu, setShowMenu] = useState<Boolean>(false);
   return (
-    <FNavbar>
-      <FNavbar.Brand href="/">
-        <div className="inline rounded-[50%] -rotate-6 bg-yellow-400 text-red-600 text-5xl pb-2 cursor-pointer my-1">
-          <span className={`${Pop.className} inline-block font-semibold`}>
-            Seinfeld Store
-          </span>
-        </div>
-      </FNavbar.Brand>
-      <div className="flex md:order-2">
-        {!user ? (
-          <div className="z-1">
-            <Button onClick={() => signIn()}>Sign In</Button>
-            <FNavbar.Toggle />
+    <header className="shadow-md pb-3">
+      <nav className="flex justify-between items-center mx-[10%] my-2">
+        <Link href="/" className="flex">
+          <div className="inline rounded-[50%] -rotate-6 bg-yellow-400 text-red-600 text-5xl pb-2 cursor-pointer my-1">
+            <span className={`${Pop.className} inline-block font-semibold`}>
+              Seinfeld Store
+            </span>
           </div>
+        </Link>
+
+        {!user ? (
+          <button
+            className="bg-yellow-300 rounded-md px-4 py-2"
+            onClick={() => signIn()}
+          >
+            Sign In
+          </button>
         ) : (
-          <Dropdown
-            inline
-            label={
-              <Avatar
-                rounded
-                alt="User Profile"
-                img={user?.image || "/images/no-profile-picture.png"}
-              />
-            }
-          >
-            <Dropdown.Header>
-              <span className="block text-sm">{user?.name}</span>
-              <span className="block truncate text-sm font-medium">
-                {user?.email}
-              </span>
-            </Dropdown.Header>
-            {navbarLinks.map((link) => (
-              <Dropdown.Item
-                key={link.href}
-                href={link.href}
-                className={`${pathname === link.href && "bg-gray-100"} ${
-                  !link.requiresAuth && "block md:hidden"
-                }`}
-              >
-                {link.label}
-              </Dropdown.Item>
-            ))}
-
-            <Dropdown.Divider />
-
-            <Dropdown.Item
-              onClick={() => signOut({ callbackUrl: "http://localhost:3000" })}
+          <>
+            <div
+              className="relative ml-3 "
+              onClick={() => setShowMenu(!showMenu)}
             >
-              Sign Out
-            </Dropdown.Item>
-            <div className="flex gap-3 items-center p-2"></div>
-          </Dropdown>
+              <div>
+                <button
+                  type="button"
+                  className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  id="user-menu-button"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  <span className="absolute -inset-1.5"></span>
+                  <span className="sr-only">Open user menu</span>
+                  <img
+                    className="h-8 w-8 rounded-full"
+                    src={user.image || "images/no-profile-picture"}
+                    alt={user.name || "User image"}
+                    onClick={() => setShowMenu(!showMenu)}
+                  />
+                </button>
+              </div>
+              {showMenu && (
+                <div
+                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="user-menu-button"
+                >
+                  <a
+                    href="#"
+                    className="block px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    id="user-menu-item-0"
+                  >
+                    Orders (Comming soon)
+                  </a>
+
+                  <p
+                    onClick={() =>
+                      signOut({ callbackUrl: `${config.website_url}` })
+                    }
+                    className="cursor-pointer block px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    id="user-menu-item-2"
+                  >
+                    Sign out
+                  </p>
+                </div>
+              )}
+            </div>
+          </>
         )}
-      </div>
-      <FNavbar.Collapse>
-        {navbarLinks.map((link) => (
-          <FNavbar.Link
-            key={link.href}
-            href={link.href}
-            className={`${!link.requiresAuth && "hidden md:block"} ${
-              link.requiresAuth && "hidden"
-            }`}
-            active={pathname === link.href}
-          >
-            {link.label}
-          </FNavbar.Link>
-        ))}
-      </FNavbar.Collapse>
-    </FNavbar>
+      </nav>
+    </header>
   );
 };
 
-export default Navbar;
+export default NewNavbar;

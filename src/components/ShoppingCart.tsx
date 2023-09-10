@@ -1,16 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { Badge } from "flowbite-react";
-import { AiOutlineShoppingCart } from "react-icons/ai";
 import Link from "next/link";
-import { useCartStore } from "@/store/store";
-import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
-import formatPriceToSek from "@/utils/formatPrices";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCartStore } from "@/store/store";
+import {
+  AiOutlineShoppingCart,
+  AiOutlinePlusCircle,
+  AiOutlineMinusCircle,
+} from "react-icons/ai";
+import formatPriceToSek from "@/utils/formatPrices";
 import CheckoutButton from "./ChechoutButton";
 
-const ShoppingCart = () => {
+type email = string | null | undefined;
+
+const ShoppingCart = ({ email }: { email: email }) => {
   const {
     addToCart,
     toggleCart,
@@ -57,7 +61,11 @@ const ShoppingCart = () => {
             <h1 className="text-2xl font-semibold">Your cart</h1>
             <div className="flex flex-col gap-4">
               {cart.map((product) => (
-                <motion.div key={product.id} layout className="flex gap-4">
+                <motion.div
+                  key={product.id}
+                  layout
+                  className="flex gap-4 relative"
+                >
                   <Link href={`/products/${product.id}`} className="flex gap-4">
                     <Image
                       src={product.image}
@@ -68,16 +76,20 @@ const ShoppingCart = () => {
                     <div>
                       <p>{product.name}</p>
                       <div>
-                        Qty: {product.quantity}
-                        <div className="flex">
-                          <AiOutlinePlusCircle
-                            onClick={() => addToCart(product)}
-                          />
+                        Quantity: {product.quantity}
+                        <div className="flex py-2">
                           <AiOutlineMinusCircle
                             onClick={() => removeFromCart(product)}
                           />
+                          <AiOutlinePlusCircle
+                            onClick={() => addToCart(product)}
+                            className="ml-1"
+                          />
                         </div>
-                        <h3 onClick={() => clearProductFromCart(product)}>
+                        <h3
+                          onClick={() => clearProductFromCart(product)}
+                          className="underline"
+                        >
                           Remove
                         </h3>
                       </div>
@@ -89,23 +101,25 @@ const ShoppingCart = () => {
                   </Link>
                 </motion.div>
               ))}
-              <CheckoutButton />
             </div>
             <div>
               {cart.length === 0 ? (
                 <p>Your cart is empty</p>
               ) : (
-                <p className="font-semibold text-teal-700">
-                  Total:{" "}
-                  {cart.length > 0 &&
-                    formatPriceToSek(
-                      cart.reduce(
-                        (acc, cartItem) =>
-                          acc + cartItem.price! * cartItem.quantity,
-                        0
-                      )
-                    )}
-                </p>
+                <>
+                  <p className="font-semibold text-teal-700">
+                    Total:
+                    {cart.length > 0 &&
+                      formatPriceToSek(
+                        cart.reduce(
+                          (acc, cartItem) =>
+                            acc + cartItem.price! * cartItem.quantity,
+                          0
+                        )
+                      )}
+                  </p>
+                  <CheckoutButton email={email} />
+                </>
               )}
             </div>
           </motion.div>

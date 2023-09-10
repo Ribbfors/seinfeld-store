@@ -1,10 +1,29 @@
+import type { Metadata, ResolvingMetadata } from "next";
 import { getSingleProduct } from "@/utils/getProducts";
 import formatPriceToSek from "@/utils/formatPrices";
 import AddToCart from "@/components/AddToCart";
 import Image from "next/image";
 
+const getProductData = async ({ slug }: { slug: string }) => {
+  const product = await getSingleProduct(slug);
+  return product;
+};
+
+export const generateMetadata = async ({
+  params,
+}: {
+  params: { slug: string };
+}) => {
+  const product = await getProductData(params);
+  return {
+    title: product.name,
+    description: product.description,
+  };
+};
+
 const ProductPage = async ({ params }: { params: { slug: string } }) => {
-  const product = await getSingleProduct(params.slug);
+  const product = await getProductData(params);
+
   return (
     <div className="flex justify-between gap-16 p-14 text-gray-600">
       <Image

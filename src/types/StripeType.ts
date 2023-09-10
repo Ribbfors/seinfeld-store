@@ -2,7 +2,7 @@ type StripeType = {
   name: string;
   image: string[];
   price: number;
-  amount: number;
+  quantity: number;
 };
 
 export default StripeType;

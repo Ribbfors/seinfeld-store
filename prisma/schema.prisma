@@ -52,3 +52,8 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model Order {
+  email String @unique
+  sessionId String @unique
+}
