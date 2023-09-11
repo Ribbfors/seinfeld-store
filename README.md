@@ -1,6 +1,6 @@
 **Seinfeld Store**
 
-![Jerry clapping](https://media.giphy.com/media/rtr4SdtSxbWXm/giphy.gif)
+![Seinfeld gif](https://media.giphy.com/media/rtr4SdtSxbWXm/giphy.gif)
 
 **The Purpose**
 
